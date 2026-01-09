@@ -1,0 +1,379 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}About | Zihad{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== GALAXY THEME STYLES ===== */
+    .galaxy-wrapper {
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        /* Deep Space Gradient */
+        background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        color: white;
+    }
+
+    #starfield {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .about-container {
+        position: relative;
+        padding-top: 8rem;
+        padding-bottom: 5rem;
+        z-index: 10;
+    }
+
+    /* Holographic Card Styles */
+    .galaxy-card {
+        background: rgba(16, 21, 40, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 245, 255, 0.15);
+        border-radius: 20px;
+        box-shadow: 0 0 30px rgba(0, 245, 255, 0.05), inset 0 0 20px rgba(0, 245, 255, 0.02);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .galaxy-card:hover {
+        border-color: rgba(0, 245, 255, 0.5);
+        box-shadow: 0 0 50px rgba(0, 245, 255, 0.15), inset 0 0 30px rgba(0, 245, 255, 0.05);
+        transform: translateY(-5px);
+    }
+
+    /* Profile Image - Planet Style */
+    .profile-orbit {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        margin: 0 auto 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-orbit::before {
+        content: '';
+        position: absolute;
+        inset: -20px;
+        border: 2px dashed rgba(0, 245, 255, 0.3);
+        border-radius: 50%;
+        animation: spin 20s linear infinite;
+    }
+
+    .profile-orbit::after {
+        content: '';
+        position: absolute;
+        inset: -10px;
+        border: 2px solid rgba(139, 92, 246, 0.3);
+        border-radius: 50%;
+        border-right-color: transparent;
+        border-left-color: transparent;
+        animation: spin 15s linear infinite reverse;
+    }
+
+    .profile-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 50px rgba(0, 245, 255, 0.2);
+        position: relative;
+        z-index: 5;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Typing Effect Title */
+    .galaxy-title {
+        font-family: var(--font-display);
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-align: center;
+        background: linear-gradient(to right, #fff, #00f5ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 3rem;
+        text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+    }
+
+    .stat-box {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .stat-label {
+        font-family: var(--font-mono);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #fff;
+        word-break: break-all;
+        /* Fix for long emails overflowing */
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+        text-shadow: 0 0 15px var(--primary-color);
+    }
+
+    /* Bio Text */
+    .bio-wrapper {
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        padding: 3rem;
+        text-align: center;
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: #e2e8f0;
+    }
+
+    .btn-galaxy {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        color: black;
+        font-weight: 700;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        box-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
+    }
+
+    .btn-galaxy:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 0 40px rgba(0, 245, 255, 0.6);
+        color: black;
+    }
+
+    @media (max-width: 768px) {
+        .about-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0 2rem 3rem 2rem;
+        }
+
+        .btn-galaxy {
+            width: 100%;
+            margin: 0 !important;
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="galaxy-wrapper">
+    <!-- Interactive Canvas -->
+    <canvas id="starfield"></canvas>
+
+    <div class="container about-container">
+        <!-- Profile Orbit -->
+        {% if about.profile_image %}
+        <div class="profile-orbit" data-aos="zoom-in">
+            <img src="{{ about.profile_image.url }}" alt="Profile" class="profile-img">
+        </div>
+        {% endif %}
+
+        <h1 class="galaxy-title" data-aos="fade-up">About Me</h1>
+
+        <!-- Bio -->
+        <div class="galaxy-card bio-wrapper" data-aos="fade-up" data-aos-delay="100">
+            <p>{{ about.long_bio|linebreaksbr }}</p>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="stats-grid">
+            <div class="galaxy-card stat-box" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-code stat-icon"></i>
+                <div class="stat-label">Main Skill</div>
+                <div class="stat-value">Full Stack Dev</div>
+            </div>
+
+            <div class="galaxy-card stat-box" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="stat-label">Location</div>
+                <div class="stat-value">{{ about.address }}</div>
+            </div>
+
+            <div class="galaxy-card stat-box" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                <div class="stat-label">Email</div>
+                <div class="stat-value">{{ about.email }}</div>
+            </div>
+
+            <div class="galaxy-card stat-box" data-aos="fade-up" data-aos-delay="500">
+                <div class="stat-icon"><i class="fas fa-language"></i></div>
+                <div class="stat-label">Languages</div>
+                <div class="stat-value">{{ about.languages }}</div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-center pb-5 about-actions" data-aos="fade-up" data-aos-delay="600">
+            {% if about.cv_download_link %}
+            <a href="{{ about.cv_download_link }}" download class="btn-galaxy me-3">
+                <i class="fas fa-download me-2"></i> Download CV
+            </a>
+            {% endif %}
+            <a href="{% url 'contact' %}" class="btn-galaxy"
+                style="background: transparent; border: 2px solid var(--primary-color); color: white;">
+                Contact Me
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- STARFIELD JS SCRIPT -->
+<script>
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let stars = [];
+    const numStars = 200;
+
+    // Mouse tracking for interaction
+    let mouse = { x: null, y: null };
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.x;
+        mouse.y = e.y;
+    });
+
+    window.addEventListener('resize', resize);
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+
+    class Star {
+        constructor() {
+            this.init();
+        }
+
+        init() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.z = Math.random() * 2; // Depth
+            this.size = Math.random() * 2;
+            this.vx = (Math.random() - 0.5) * 0.5; // Velocity
+            this.vy = (Math.random() - 0.5) * 0.5;
+
+            // Interaction properties
+            this.baseX = this.x;
+            this.baseY = this.y;
+        }
+
+        update() {
+            // Basic movement
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // Bounce off edges
+            if (this.x < 0 || this.x > width) this.vx *= -1;
+            if (this.y < 0 || this.y > height) this.vy *= -1;
+
+            // Mouse Interaction (Parallax/Repel)
+            if (mouse.x != null) {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                const maxDistance = 200;
+                let force = (maxDistance - distance) / maxDistance;
+
+                // Move stars slightly AWAY from cursor if close
+                if (distance < maxDistance) {
+                    this.x -= forceDirectionX * force * 2;
+                    this.y -= forceDirectionY * force * 2;
+                }
+            }
+        }
+
+        draw() {
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.8 + 0.2})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Add connecting lines to mouse if close (Constellation effect)
+            if (mouse.x != null) {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(0, 245, 255, ${0.2 - distance / 500})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function initStars() {
+        stars = [];
+        for (let i = 0; i < numStars; i++) {
+            stars.push(new Star());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        stars.forEach(star => {
+            star.update();
+            star.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    // Start
+    resize();
+    initStars();
+    animate();
+</script>
+{% endblock %}

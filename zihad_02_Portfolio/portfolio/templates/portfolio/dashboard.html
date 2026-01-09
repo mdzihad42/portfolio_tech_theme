@@ -1,0 +1,218 @@
+8{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard | Zihad{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-header {
+        padding-top: 8rem;
+        padding-bottom: 3rem;
+        text-align: center;
+    }
+
+    .admin-card {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 10px 30px -10px rgba(0, 245, 255, 0.2);
+    }
+
+    .stat-count {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(to right, #fff, #94a3b8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: var(--font-display);
+    }
+
+    .admin-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .btn-admin {
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .btn-admin-view {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-admin-add {
+        background: var(--primary-color);
+        color: #000;
+        border: 1px solid var(--primary-color);
+    }
+
+    .btn-admin:hover {
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
+</style>
+
+<div class="container mb-5">
+    <div class="dashboard-header">
+        <h1 class="display-4 fw-bold text-white mb-3">Admin Dashboard</h1>
+        <p class="text-muted">Manage your portfolio content from one place</p>
+        <form action="{% url 'logout' %}" method="post" class="d-inline-block mt-3">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </button>
+        </form>
+    </div>
+
+    <div class="row g-4">
+        <!-- Hero Section -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-primary mb-3"><i class="fas fa-home fa-2x"></i></div>
+                    <h3 class="h5 text-white">Hero Section</h3>
+                    <div class="stat-count">{{ hero_count }}</div>
+                    <p class="text-muted small">Main profile info</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{% url 'custom_admin_list' 'hero' %}" class="btn-admin btn-admin-view">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-primary mb-3"><i class="fas fa-layer-group fa-2x"></i></div>
+                    <h3 class="h5 text-white">Projects</h3>
+                    <div class="stat-count">{{ project_count }}</div>
+                    <p class="text-muted small">Showcase items</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{% url 'custom_admin_list' 'project' %}" class="btn-admin btn-admin-view">List</a>
+                    <a href="{% url 'custom_admin_create' 'project' %}" class="btn-admin btn-admin-add">Add</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-primary mb-3"><i class="fas fa-code fa-2x"></i></div>
+                    <h3 class="h5 text-white">Skills</h3>
+                    <div class="stat-count">{{ skill_count }}</div>
+                    <p class="text-muted small">Technical abilities</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{% url 'custom_admin_list' 'skill' %}" class="btn-admin btn-admin-view">List</a>
+                    <a href="{% url 'custom_admin_create' 'skill' %}" class="btn-admin btn-admin-add">Add</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-primary mb-3"><i class="fas fa-briefcase fa-2x"></i></div>
+                    <h3 class="h5 text-white">Experience</h3>
+                    <div class="stat-count">{{ experience_count }}</div>
+                    <p class="text-muted small">Job history</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{% url 'custom_admin_list' 'experience' %}" class="btn-admin btn-admin-view">List</a>
+                    <a href="{% url 'custom_admin_create' 'experience' %}" class="btn-admin btn-admin-add">Add</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-primary mb-3"><i class="fas fa-graduation-cap fa-2x"></i></div>
+                    <h3 class="h5 text-white">Education</h3>
+                    <div class="stat-count">{{ education_count }}</div>
+                    <p class="text-muted small">Academic records</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{% url 'custom_admin_list' 'education' %}" class="btn-admin btn-admin-view">List</a>
+                    <a href="{% url 'custom_admin_create' 'education' %}" class="btn-admin btn-admin-add">Add</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Posts -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-primary mb-3"><i class="fas fa-newspaper fa-2x"></i></div>
+                    <h3 class="h5 text-white">Blog Posts</h3>
+                    <div class="stat-count">{{ blog_count }}</div>
+                    <p class="text-muted small">Articles & updates</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{% url 'custom_admin_list' 'blogpost' %}" class="btn-admin btn-admin-view">List</a>
+                    <a href="{% url 'custom_admin_create' 'blogpost' %}" class="btn-admin btn-admin-add">Add</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-primary mb-3"><i class="fas fa-envelope fa-2x"></i></div>
+                    <h3 class="h5 text-white">Messages</h3>
+                    <div class="stat-count">{{ contact_count }}</div>
+                    <p class="text-muted small">Contact form submissions</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{% url 'custom_admin_list' 'contact' %}" class="btn-admin btn-admin-view">View All</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Settings -->
+        <div class="col-md-6 col-lg-3">
+            <div class="admin-card">
+                <div>
+                    <div class="text-white mb-3" style="opacity: 0.5;"><i class="fas fa-cog fa-2x"></i></div>
+                    <h3 class="h5 text-white">Settings</h3>
+                    <p class="text-muted small mt-2">Manage About, Categories, and other site meta-data.</p>
+                </div>
+                <div class="admin-actions">
+                    <a href="/admin/" class="btn-admin btn-admin-view">Go to Default Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

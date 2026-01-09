@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portfolio{% endblock %}</title>
+    <meta name="description"
+        content="Portfolio of MD Zihad Hossain, a Full Stack Django Developer. View projects, skills, and experience.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- AOS Animation -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    {% load static %}
+
+    <style>
+        /* ===== TECH STARTUP STYLE - ROOT VARIABLES ===== */
+        :root {
+            /* Neo-Futuristic Color Palette */
+            --primary-color: #00f5ff;
+            /* Neon Cyan */
+            --secondary-color: #8b5cf6;
+            /* Electric Violet */
+            --accent-color: #a855f7;
+            /* Bright Purple */
+            --success-color: #00f5ff;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+
+            /* Advanced Gradients */
+            --primary-gradient: linear-gradient(135deg, #00f5ff 0%, #8b5cf6 50%, #a855f7 100%);
+            --secondary-gradient: linear-gradient(135deg, #00f5ff 0%, #1e1b4b 100%);
+            --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            --dark-gradient: linear-gradient(135deg, #0c0a1a 0%, #1e1b4b 50%, #312e81 100%);
+            --light-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --neon-gradient: linear-gradient(135deg, #00f5ff 0%, #8b5cf6 100%);
+            --violet-gradient: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            --rainbow-gradient: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff);
+
+            /* Enhanced Neo-Futuristic Backgrounds */
+            --bg-primary: #0c0a1a;
+            /* Deep Navy */
+            --bg-secondary: #1e1b4b;
+            /* Dark Purple */
+            --bg-tertiary: #312e81;
+            /* Medium Purple */
+            --bg-card: rgba(30, 27, 75, 0.08);
+            /* Ultra Glass */
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            /* Premium Glass */
+            --bg-overlay: rgba(12, 10, 26, 0.98);
+            /* Deep Overlay */
+            --card-bg: rgba(30, 27, 75, 0.08);
+            /* Enhanced Card Background */
+
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #ffffffff;
+            --text-accent: #00f5ff;
+            /* Neon Cyan */
+
+            /* Enhanced Borders */
+            --border-color: rgba(0, 245, 255, 0.08);
+            /* Subtle Neon Border */
+            --border-hover: rgba(0, 245, 255, 0.25);
+            /* Bright Neon */
+            --glass-border: rgba(0, 245, 255, 0.06);
+            /* Premium Glass Border */
+
+            /* Enhanced Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 30px rgba(0, 245, 255, 0.15);
+            --shadow-glow-hover: 0 0 50px rgba(0, 245, 255, 0.3);
+            --shadow-neon: 0 0 20px rgba(139, 92, 246, 0.2);
+            --shadow-neon-hover: 0 0 40px rgba(139, 92, 246, 0.4);
+            --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-floating: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+            /* Smooth Transitions */
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-magnetic: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+            /* Premium Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+
+            /* Modern Border Radius */
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+
+            /* Advanced Typography */
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-display: 'Outfit', 'Inter', 'SF Pro Display', sans-serif;
+        }
+
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image:
+                /* Floating gradient blobs */
+                radial-gradient(circle at 20% 20%, rgba(0, 245, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 245, 255, 0.06) 0%, transparent 50%),
+                /* Base gradient */
+                linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+        }
+
+        /* Particle Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.02) 1px, transparent 1px);
+            background-size: 100px 100px, 150px 150px, 200px 200px;
+            animation: particleFloat 20s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ===== MODERN TECH STARTUP COMPONENTS ===== */
+
+        /* Modern Navbar */
+        .modern-navbar {
+            background: var(--bg-glass) !important;
+            backdrop-filter: blur(25px) !important;
+            -webkit-backdrop-filter: blur(25px) !important;
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-lg) 0;
+            box-shadow: var(--shadow-sm);
+            position: fixed !important;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+            transition: var(--transition-normal);
+        }
+
+        .modern-navbar:hover {
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Modern Brand */
+        .modern-brand {
+            font-weight: 700 !important;
+            font-size: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text;
+            letter-spacing: -0.025em;
+            transition: var(--transition-fast);
+            position: relative;
+            font-family: var(--font-mono);
+        }
+
+        .modern-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .modern-brand:hover::after {
+            width: 100%;
+        }
+
+        /* Modern Nav Links */
+        .modern-nav .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            transition: var(--transition-fast);
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-family: var(--font-mono);
+        }
+
+        .modern-nav .nav-link:hover {
+            color: var(--text-primary) !important;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            transform: translateY(-1px);
+        }
+
+        .modern-nav .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .modern-nav .nav-link:hover::before {
+            width: 100%;
+        }
+
+        /* Navbar Toggler Icon */
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 245, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        /* Override Bootstrap text-muted to use white */
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Modern Footer */
+        .modern-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: var(--spacing-2xl) 0 var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .modern-footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .modern-footer-section h3 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modern-footer-section p,
+        .modern-footer-section a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+
+        .modern-footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .modern-footer-social {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .modern-footer-social a {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition-fast);
+        }
+
+        .modern-footer-social a:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .modern-footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--spacing-xl);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stagger animations */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .animate-fade-in-left {
+            animation: fadeInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .animate-fade-in-right {
+            animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .animate-slide-in-up {
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Stagger delays */
+        .stagger-1 {
+            animation-delay: 0.1s;
+        }
+
+        .stagger-2 {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-3 {
+            animation-delay: 0.3s;
+        }
+
+        .stagger-4 {
+            animation-delay: 0.4s;
+        }
+
+        .stagger-5 {
+            animation-delay: 0.5s;
+        }
+
+        .stagger-6 {
+            animation-delay: 0.6s;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .modern-footer-content {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .modern-navbar {
+                padding: var(--spacing-md) 0;
+            }
+
+            .modern-brand {
+                font-size: 1.25rem;
+            }
+
+            .modern-nav .nav-link {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.85rem;
+            }
+
+            .modern-footer-content {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modern-navbar {
+                padding: var(--spacing-sm) 0;
+            }
+
+            .modern-brand {
+                font-size: 1.1rem;
+            }
+
+            .modern-nav .nav-link {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.8rem;
+                margin: 0 var(--spacing-xs);
+            }
+
+            .modern-footer-content {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+
+            .modern-footer-section {
+                text-align: center;
+            }
+
+            .modern-footer-social {
+                justify-content: center;
+            }
+
+            /* Disable animations on small screens */
+            [data-aos] {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .modern-navbar {
+                padding: var(--spacing-xs) 0;
+            }
+
+            .modern-brand {
+                font-size: 1rem;
+            }
+
+            .modern-nav .nav-link {
+                padding: var(--spacing-xs);
+                font-size: 0.75rem;
+                margin: 0;
+            }
+
+            .modern-footer {
+                padding: var(--spacing-xl) 0 var(--spacing-lg);
+            }
+
+            .modern-footer-section h3 {
+                font-size: 1rem;
+            }
+
+            .modern-footer-social {
+                gap: var(--spacing-sm);
+            }
+
+            .modern-footer-social a {
+                width: 35px;
+                height: 35px;
+            }
+
+            .modern-footer-bottom {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modern-navbar {
+                padding: 0.5rem 0;
+            }
+
+            .modern-brand {
+                font-size: 1.3rem;
+            }
+
+            .modern-nav .nav-link {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .modern-footer {
+                padding: var(--spacing-lg) 0 var(--spacing-md);
+            }
+
+            .modern-footer-section {
+                padding: 0 var(--spacing-sm);
+            }
+
+            .modern-footer-bottom {
+                padding-top: var(--spacing-lg);
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ========================= MODERN TECH STARTUP NAVBAR ========================= -->
+    <nav class="navbar navbar-expand-lg modern-navbar">
+        <div class="container">
+            <a class="navbar-brand modern-brand" href="{% url 'home' %}">
+                MD ZIHAD HOSSAIN
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto modern-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'projects' %}">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'experience' %}">Experience</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'education' %}">Education</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- ========================= MAIN CONTENT ========================= -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+
+    <!-- ========================= MODERN TECH STARTUP FOOTER ========================= -->
+    <footer class="modern-footer">
+        <div class="container">
+            <div class="modern-footer-content">
+                <div class="modern-footer-section">
+                    <h3>MD ZIHAD HOSSAIN</h3>
+                    <p>Full Stack Django Developer </p>
+                    <p>Building innovative solutions with modern technologies</p>
+                    <div class="modern-footer-social">
+                        <a href="https://www.linkedin.com/in/md-zihad-hossain-580074387/" aria-label="LinkedIn"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/mdzihad42" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://x.com/ZihadMd60133" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://mail.google.com/mail/?view=cm&to=mdzihad01793561142@gmail.com"
+                            aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="modern-footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="{% url 'about' %}">About</a></p>
+                    <p><a href="{% url 'projects' %}">Projects</a></p>
+                    <p><a href="{% url 'experience' %}">Experience</a></p>
+                    <p><a href="{% url 'contact' %}">Contact</a></p>
+                </div>
+                <div class="modern-footer-section">
+                    <h3>Contact Info</h3>
+                    <p>Dhaka, Bangladesh</p>
+                    <p>mdzihad01793561142@gmail.com</p>
+                    <p>+8801793561142</p>
+                </div>
+            </div>
+            <div class="modern-footer-bottom">
+                <p>&copy; 2024 MD ZIHAD HOSSAIN. All rights reserved. Built with ❤️ using Django </p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+
+    <!-- AOS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            disable: function() { return window.innerWidth < 768; }
+        });
+    </script>
+
+</body>
+
+</html>

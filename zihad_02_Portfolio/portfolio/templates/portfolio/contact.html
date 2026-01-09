@@ -1,0 +1,568 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Contact Me{% endblock %}
+
+{% block content %}
+
+<style>
+    /* ===== CONTACT PAGE SPECIFIC STYLES ===== */
+
+    /* Contact Container */
+    .contact-container {
+        padding: var(--spacing-3xl) 0;
+        min-height: 80vh;
+    }
+
+    /* Contact Header */
+    .contact-header {
+        text-align: center;
+        margin-bottom: var(--spacing-3xl);
+        margin-top: 60px;
+    }
+
+    .contact-title {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        font-weight: 800;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: var(--spacing-lg);
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
+        text-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+    }
+
+    .contact-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Contact Grid */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-3xl);
+        margin-bottom: var(--spacing-3xl);
+    }
+
+    /* Contact Info */
+    .contact-info {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-3xl);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-info::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-gradient);
+    }
+
+    .contact-info-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-xl);
+        font-family: var(--font-display);
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding: var(--spacing-lg);
+        background: var(--bg-glass);
+        border-radius: var(--radius-lg);
+        transition: var(--transition-normal);
+        border: 1px solid var(--border-color);
+    }
+
+    .contact-item:hover {
+        transform: translateY(-3px);
+        border-color: var(--border-hover);
+        box-shadow: var(--shadow-neon);
+    }
+
+    .contact-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary-gradient);
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: var(--spacing-lg);
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .contact-details h4 {
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .contact-details p {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 0.80rem;
+    }
+
+    .contact-details a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: var(--transition-fast);
+    }
+
+    .contact-details a:hover {
+        color: var(--secondary-color);
+        text-decoration: underline;
+    }
+
+    /* Contact Form */
+    .contact-form {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-3xl);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-form::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-gradient);
+    }
+
+    .contact-form-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-xl);
+        font-family: var(--font-display);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .form-label {
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-sm);
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
+        background: var(--bg-glass) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: var(--radius-lg) !important;
+        color: var(--text-primary) !important;
+        font-size: 0.95rem;
+        transition: var(--transition-normal) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.1) !important;
+        outline: none !important;
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted) !important;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .btn-contact {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: var(--spacing-md) var(--spacing-2xl);
+        border-radius: var(--radius-lg);
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: var(--transition-magnetic);
+        position: relative;
+        overflow: hidden;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .btn-contact:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: var(--shadow-glow);
+    }
+
+    .btn-contact::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-full);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-contact:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .alert-success {
+        background: rgba(0, 245, 255, 0.1) !important;
+        border: 1px solid rgba(0, 245, 255, 0.3) !important;
+        color: var(--primary-color) !important;
+        border-radius: var(--radius-lg) !important;
+        padding: var(--spacing-lg) !important;
+        margin-top: var(--spacing-lg) !important;
+    }
+
+    /* Social Links */
+    .social-links {
+        text-align: center;
+        margin-top: var(--spacing-3xl);
+    }
+
+    .social-links h3 {
+        color: var(--text-primary);
+        font-size: 1.25rem;
+        margin-bottom: var(--spacing-xl);
+        font-family: var(--font-display);
+    }
+
+    .social-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: var(--spacing-lg);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .social-item {
+        background: var(--bg-glass);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-lg);
+        text-align: center;
+        transition: var(--transition-normal);
+        text-decoration: none;
+        color: var(--text-secondary);
+    }
+
+    .social-item:hover {
+        transform: translateY(-5px);
+        border-color: var(--border-hover);
+        box-shadow: var(--shadow-floating);
+        color: var(--primary-color);
+    }
+
+    .social-icon {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-sm);
+        display: block;
+    }
+
+    .social-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+            gap: var(--spacing-2xl);
+        }
+
+        .contact-info,
+        .contact-form {
+            padding: var(--spacing-2xl);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .contact-container {
+            padding: var(--spacing-2xl) 0;
+        }
+
+        .contact-title {
+            font-size: 2.5rem;
+        }
+
+        .contact-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .contact-info,
+        .contact-form {
+            padding: var(--spacing-xl);
+        }
+
+        .contact-item {
+            flex-direction: column;
+            text-align: center;
+            padding: var(--spacing-md);
+        }
+
+        .contact-icon {
+            margin-right: 0;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .social-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .contact-title {
+            font-size: 2rem;
+        }
+
+        .contact-info-title,
+        .contact-form-title {
+            font-size: 1.25rem;
+        }
+
+        .social-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .social-item {
+            padding: var(--spacing-md);
+        }
+
+        .social-icon {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Floating Animation */
+    .contact-item,
+    .social-item {
+        animation: gentleFloat 6s ease-in-out infinite;
+    }
+
+    .contact-item:nth-child(even),
+    .social-item:nth-child(even) {
+        animation-delay: -3s;
+    }
+
+    @keyframes gentleFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
+    /* Neon Effects */
+    .contact-title {
+        filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.3));
+    }
+
+    .btn-contact:hover {
+        filter: drop-shadow(0 0 15px rgba(0, 245, 255, 0.5));
+    }
+</style>
+
+<div class="container contact-container">
+    <!-- Contact Header -->
+    <div class="contact-header">
+        <h1 class="contact-title">Get In Touch</h1>
+        <p class="contact-subtitle">
+            Ready to bring your ideas to life? Let's discuss your next project and create something amazing together.
+        </p>
+    </div>
+
+    <!-- Contact Grid -->
+    <div class="contact-grid">
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <h2 class="contact-info-title">Let's Connect</h2>
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-details">
+                    <h4>Email</h4>
+                    <p><a href="mailto:mdzihad01793561142@gmail.com">mdzihad01793561142@gmail.com</a></p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="contact-details">
+                    <h4>Phone</h4>
+                    <p><a href="tel:+8801793561142">+880 1793 561142</a></p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="contact-details">
+                    <h4>Location</h4>
+                    <p>Dhaka, Bangladesh</p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="contact-details">
+                    <h4>Response Time</h4>
+                    <p>Within 24 hours</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form">
+            <h2 class="contact-form-title">Send Message</h2>
+
+            <form id="contactForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="subject" name="subject" placeholder="What's this about?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-contact">
+                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                </button>
+            </form>
+
+            <div id="successMessage" class="alert alert-success" style="display: none;">
+                <i class="fas fa-check-circle me-2"></i>
+                Your message has been sent successfully! I'll get back to you soon.
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="social-links">
+        <h3>Follow Me</h3>
+        <div class="social-grid">
+            <a href="https://github.com/mdzihad42" class="social-item" aria-label="GitHub">
+                <i class="fab fa-github social-icon"></i>
+                <span class="social-label">GitHub</span>
+            </a>
+            <a href="https://www.linkedin.com/in/md-zihad-hossain-580074387/" class="social-item" aria-label="LinkedIn">
+                <i class="fab fa-linkedin-in social-icon"></i>
+                <span class="social-label">LinkedIn</span>
+            </a>
+            <a href="https://x.com/ZihadMd60133" class="social-item" aria-label="Twitter">
+                <i class="fab fa-twitter social-icon"></i>
+                <span class="social-label">Twitter</span>
+            </a>
+            <a href="https://www.facebook.com/muhammad.zihad.46362" class="social-item" aria-label="Facebook">
+                <i class="fab fa-facebook-f social-icon"></i>
+                <span class="social-label">Facebook</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const submitBtn = this.querySelector('.btn-contact');
+    const originalText = submitBtn.innerHTML;
+
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+    submitBtn.disabled = true;
+
+    const formData = new FormData(this);
+    fetch('{% url "contact" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('successMessage').style.display = 'block';
+            this.reset();
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert('There was an error sending your message. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('There was an error sending your message. Please try again.');
+    })
+    .finally(() => {
+        // Reset button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
+</script>
+
+{% endblock %}

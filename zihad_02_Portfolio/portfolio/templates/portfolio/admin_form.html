@@ -1,0 +1,100 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} {{ model_name|title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="padding-top: 8rem !important; min-height: 80vh;">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}"
+                                class="text-primary text-decoration-none">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'custom_admin_list' model_name %}"
+                                class="text-primary text-decoration-none">{{ model_name|title }}s</a></li>
+                        <li class="breadcrumb-item active text-muted" aria-current="page">{{ action }}</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Glass Panel Form -->
+            <div class="glass-panel p-5"
+                style="background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border-radius: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                <h2 class="text-white fw-bold mb-4 border-bottom pb-3 border-secondary border-opacity-25">{{ action }}
+                    {{ model_name|title }}</h2>
+
+                <form method="post" enctype="multipart/form-data" class="custom-admin-form">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}"
+                            class="form-label text-primary fw-bold small text-uppercase letter-spacing-1">{{ field.label }}</label>
+                        {% if field.help_text %}
+                        <small class="text-muted d-block mb-1">{{ field.help_text }}</small>
+                        {% endif %}
+
+                        <div class="input-group">
+                            {{ field }}
+                        </div>
+
+                        {% if field.errors %}
+                        <div class="alert alert-danger mt-2 py-2 small">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex gap-3 mt-5">
+                        <button type="submit" class="btn-glow-primary px-5 py-2">
+                            <i class="fas fa-save me-2"></i> Save Changes
+                        </button>
+                        <a href="{% url 'custom_admin_list' model_name %}"
+                            class="btn btn-outline-light px-4 py-2 rounded-pill">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom Form Styling to match Theme */
+    .custom-admin-form input[type="text"],
+    .custom-admin-form input[type="email"],
+    .custom-admin-form input[type="url"],
+    .custom-admin-form input[type="number"],
+    .custom-admin-form input[type="date"],
+    .custom-admin-form textarea,
+    .custom-admin-form select {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 0.8rem 1rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s;
+    }
+
+    .custom-admin-form input:focus,
+    .custom-admin-form textarea:focus,
+    .custom-admin-form select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 15px rgba(0, 245, 255, 0.1);
+    }
+
+    .custom-admin-form input[type="file"] {
+        background: transparent;
+        color: white;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        padding: 1rem;
+        width: 100%;
+        border-radius: 0.75rem;
+    }
+</style>
+{% endblock %}

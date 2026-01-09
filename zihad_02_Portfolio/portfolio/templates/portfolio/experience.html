@@ -1,0 +1,488 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Experience | Zihad{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== EXPERIENCE PAGE STYLES ===== */
+    .experience-container {
+        padding-top: 8rem;
+        padding-bottom: 5rem;
+        position: relative;
+        z-index: 10;
+        /* Ensure content is above canvas */
+    }
+
+    /* Snake Canvas */
+    #snakeCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .section-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-align: center;
+        margin: 0 auto 4rem auto;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: var(--font-display);
+        display: block;
+        width: fit-content;
+    }
+
+    /* Luminous Timeline */
+    .timeline {
+        position: relative;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 0;
+    }
+
+    /* Central Line */
+    .timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(-50%);
+        border-radius: 4px;
+    }
+
+    /* Animated Line Fill */
+    .timeline-progress {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 4px;
+        background: var(--primary-color);
+        transform: translateX(-50%);
+        border-radius: 4px;
+        height: 0;
+        transition: height 0.3s ease-out;
+        box-shadow: 0 0 15px var(--primary-color);
+        z-index: 1;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 3rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Content Cards */
+    .timeline-content {
+        position: relative;
+        width: 45%;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        transition: all 0.4s ease;
+        z-index: 2;
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 10px 40px -5px rgba(0, 245, 255, 0.2);
+    }
+
+    /* Alternate Sides */
+    .timeline-item:nth-child(odd) {
+        justify-content: flex-start;
+    }
+
+    .timeline-item:nth-child(even) {
+        justify-content: flex-end;
+    }
+
+    /* Dot/Marker */
+    .timeline-marker {
+        position: absolute;
+        left: 50%;
+        top: 2rem;
+        width: 20px;
+        height: 20px;
+        background: #1a1a1a;
+        border: 4px solid var(--primary-color);
+        border-radius: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+        box-shadow: 0 0 10px var(--primary-color);
+        transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-marker {
+        background: var(--primary-color);
+        box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--primary-color);
+        transform: translateX(-50%) scale(1.3);
+    }
+
+    /* Connector Line */
+    .timeline-content::after {
+        content: '';
+        position: absolute;
+        top: 2rem;
+        width: 25px;
+        /* Distance to center line */
+        height: 2px;
+        background: rgba(255, 255, 255, 0.2);
+        transition: width 0.3s;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content::after {
+        right: -25px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content::after {
+        left: -25px;
+    }
+
+    /* Content Styling */
+    .job-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .company-logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .job-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+    }
+
+    .company-name {
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .timeline-date {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .timeline-date i {
+        color: var(--secondary-color);
+    }
+
+    .job-desc {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .timeline::before {
+            left: 30px;
+        }
+
+        .timeline-progress {
+            left: 30px;
+        }
+
+        .timeline-item,
+        .timeline-item:nth-child(odd),
+        .timeline-item:nth-child(even) {
+            justify-content: flex-end;
+            padding-left: 60px;
+        }
+
+        .timeline-content {
+            width: 100%;
+        }
+
+        .timeline-marker {
+            left: 30px;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after,
+        .timeline-item:nth-child(even) .timeline-content::after {
+            left: -30px;
+            width: 30px;
+        }
+    }
+</style>
+
+<!-- Snake Canvas Background -->
+<canvas id="snakeCanvas"></canvas>
+
+<div class="container experience-container">
+    <h1 class="section-title" data-aos="zoom-in">Experience Journey</h1>
+
+    <div class="timeline">
+        <div class="timeline-progress" id="progressLine"></div>
+
+        {% for experience in experiences %}
+        <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="job-header">
+                    {% if experience.company_logo %}
+                    <img src="{{ experience.company_logo.url }}" alt="{{ experience.company_name }}"
+                        class="company-logo">
+                    {% else %}
+                    <div class="company-logo bg-dark d-flex align-items-center justify-content-center">
+                        <i class="fas fa-briefcase text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h3 class="job-title">{{ experience.job_title }}</h3>
+                        <div class="company-name">{{ experience.company_name }}</div>
+                    </div>
+                </div>
+
+                <div class="timeline-date">
+                    <i class="far fa-calendar-alt"></i>
+                    {{ experience.start_date }} - {% if experience.end_date %}{{ experience.end_date }}{% else %}Present{% endif %}
+                </div>
+
+                <p class="job-desc">
+                    {{ experience.responsibilities|linebreaksbr }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // ===== TIMELINE PROGRESS LOGIC =====
+    window.addEventListener('scroll', () => {
+        const timeline = document.querySelector('.timeline');
+        const progressLine = document.getElementById('progressLine');
+        if (!timeline || !progressLine) return;
+
+        const rect = timeline.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        let percentage = 0;
+
+        // Calculate how much of the timeline is visible
+        if (rect.top < viewportHeight / 2) {
+            const distance = (viewportHeight / 2) - rect.top;
+            const totalHeight = rect.height;
+            percentage = (distance / totalHeight) * 100;
+        }
+
+        // Clamping
+        percentage = Math.max(0, Math.min(percentage, 100));
+
+        progressLine.style.height = percentage + '%';
+    });
+
+
+    // ===== 5 AUTONOMOUS SNAKES LOGIC (REPEL FROM CURSOR) =====
+    const canvas = document.getElementById('snakeCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let mouse = { x: -1000, y: -1000 }; // Start off-screen
+
+    class Snake {
+        constructor() {
+            this.length = 60; // Longer body for Ojogor
+            this.segments = [];
+            this.angle = Math.random() * Math.PI * 2;
+            this.speed = 1.5 + Math.random(); // Slower, heavier movement
+            this.turnSpeed = 0.04;
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+
+            // Initialize segments at starting position
+            for (let i = 0; i < this.length; i++) {
+                this.segments.push({ x: this.x, y: this.y });
+            }
+        }
+
+        update() {
+            // 1. Calculate new heading (Wander + Repel)
+
+            // Random Wander
+            this.angle += (Math.random() - 0.5) * 0.1; // Smoother turns
+
+            // Wall Avoidance (Soft turn away from edges)
+            const margin = 100;
+            if (this.x < margin) this.angle += this.turnSpeed;
+            if (this.x > width - margin) this.angle += this.turnSpeed;
+            if (this.y < margin) this.angle += this.turnSpeed;
+            if (this.y > height - margin) this.angle += this.turnSpeed;
+
+            // Cursor Attraction (Come here!)
+            const dx = mouse.x - this.x; // Vector pointing TOWARDS mouse
+            const dy = mouse.y - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 500) { // Detection range increased for big snake
+                const angleToMouse = Math.atan2(dy, dx);
+                // Turn towards mouse
+                this.angle = angleToMouse;
+                this.speed = 6; // Fast Strike!
+            } else {
+                this.speed = Math.max(1.5, this.speed * 0.98); // Slow down to normal
+            }
+
+            // 2. Move Head
+            this.x += Math.cos(this.angle) * this.speed;
+            this.y += Math.sin(this.angle) * this.speed;
+
+            // Screen Wrap (Safety)
+            if (this.x < 0) this.x = width;
+            if (this.x > width) this.x = 0;
+            if (this.y < 0) this.y = height;
+            if (this.y > height) this.y = 0;
+
+            // 3. Update Segments (Follow the leader)
+            // Head is actually just a position property of the class, let's treat segments[0] as head
+            this.segments[0].x = this.x;
+            this.segments[0].y = this.y;
+
+            for (let i = 1; i < this.length; i++) {
+                const head = this.segments[i - 1];
+                const tail = this.segments[i];
+
+                const segDx = head.x - tail.x;
+                const segDy = head.y - tail.y;
+                const segDist = Math.sqrt(segDx * segDx + segDy * segDy);
+                const segAngle = Math.atan2(segDy, segDx);
+
+                // Segment spacing
+                const spacing = 12; // Increased spacing for bigger segments
+
+                // Only move if stretched too far
+                if (segDist > spacing) {
+                    const moveDist = segDist - spacing;
+                    tail.x += Math.cos(segAngle) * moveDist;
+                    tail.y += Math.sin(segAngle) * moveDist;
+                }
+            }
+        }
+
+        draw() {
+            // Draw tongue (at head)
+            const head = this.segments[0];
+            ctx.save();
+            ctx.translate(head.x, head.y);
+            // We need to rotate by the ANGLE OF MOVEMENT so the head faces forward
+            // The class 'this.angle' is the movement direction.
+            ctx.rotate(this.angle);
+
+            // Tongue
+            if (Math.random() < 0.1) { // Flicker
+                ctx.beginPath();
+                ctx.strokeStyle = '#ff3333';
+                ctx.lineWidth = 3;
+                ctx.moveTo(20, 0);
+                ctx.lineTo(40, 0);
+                ctx.lineTo(45, -8);
+                ctx.moveTo(40, 0);
+                ctx.lineTo(45, 8);
+                ctx.stroke();
+            }
+
+            // Head (Larger for Ojogor)
+            ctx.beginPath();
+            ctx.fillStyle = '#00cc44';
+            ctx.ellipse(0, 0, 25, 20, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Eyes (Scaled up)
+            ctx.fillStyle = 'white';
+            ctx.beginPath(); ctx.arc(10, -8, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(10, 8, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = 'black';
+            ctx.beginPath(); ctx.arc(13, -8, 3, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(13, 8, 3, 0, Math.PI * 2); ctx.fill();
+
+            ctx.restore();
+
+            // Body
+            for (let i = 1; i < this.length; i++) {
+                const s = this.segments[i];
+                // Tapering size
+                const size = (this.length - i) * 0.4 + 6;
+
+                ctx.beginPath();
+                ctx.fillStyle = i % 2 === 0 ? '#00cc44' : '#00b33c';
+                ctx.arc(s.x, s.y, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Shine
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.arc(s.x - size / 3, s.y - size / 3, size / 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+    }
+
+    const snakes = [];
+    const snakeCount = 1; // Only 1 Ojogor
+
+    function init() {
+        resize();
+        snakes.length = 0;
+        for (let i = 0; i < snakeCount; i++) {
+            snakes.push(new Snake());
+        }
+    }
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        snakes.forEach(snake => {
+            snake.update();
+            snake.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    // Start
+    init();
+    animate();
+</script>
+{% endblock %}

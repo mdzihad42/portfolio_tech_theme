@@ -1,0 +1,199 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Blog | Zihad{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== BLOG PAGE STYLES ===== */
+    .blog-container {
+        padding-top: 8rem;
+        padding-bottom: 5rem;
+        min-height: 100vh;
+    }
+
+    .section-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-align: center;
+        margin: 0 auto 3rem auto;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: var(--font-display);
+        display: block;
+        width: fit-content;
+    }
+
+    /* Category Navigation */
+    .category-nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .category-pill {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+
+    .category-pill:hover,
+    .category-pill.active {
+        background: var(--primary-color);
+        color: #000;
+        box-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    /* Blog Grid */
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2.5rem;
+    }
+
+    .modern-blog-card {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1.5rem;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        position: relative;
+        backdrop-filter: blur(10px);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-img-wrapper {
+        position: relative;
+        padding-top: 60%;
+        /* 16:9 Aspect ratio */
+        overflow: hidden;
+    }
+
+    .blog-img-wrapper img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .modern-blog-card:hover .blog-img-wrapper img {
+        transform: scale(1.1);
+    }
+
+    .blog-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-meta {
+        font-size: 0.8rem;
+        color: var(--primary-color);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .blog-title {
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+        font-family: var(--font-display);
+    }
+
+    .btn-read-more {
+        margin-top: auto;
+        display: inline-flex;
+        align-items: center;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        gap: 0.5rem;
+    }
+
+    .btn-read-more:hover {
+        color: var(--primary-color);
+        gap: 0.8rem;
+    }
+
+    .modern-blog-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(0, 245, 255, 0.2);
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    @media (max-width: 768px) {
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="container blog-container">
+    <h1 class="section-title" data-aos="fade-down">Insights & Articles</h1>
+
+    <!-- Categories -->
+    <div class="category-nav" data-aos="fade-up" data-aos-delay="100">
+        <a href="{% url 'blog' %}" class="category-pill {% if not request.GET.category %}active{% endif %}">All
+            Posts</a>
+        {% for category in categories %}
+        <a href="?category={{ category.id }}"
+            class="category-pill {% if request.GET.category == category.id|stringformat:'s' %}active{% endif %}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+
+    <!-- Posts Grid -->
+    <div class="blog-grid">
+        {% for post in posts %}
+        <div class="modern-blog-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
+            <div class="blog-img-wrapper">
+                {% if post.thumbnail %}
+                <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
+                {% else %}
+                <img src="https://via.placeholder.com/400x300/1e293b/00f5ff?text=Blog+Post" alt="Blog Post">
+                {% endif %}
+            </div>
+
+            <div class="blog-content">
+                <div class="blog-meta">
+                    <span>{{ post.category.name }}</span>
+                    <span>{{ post.created_at|date:"M d, Y" }}</span>
+                </div>
+
+                <h3 class="blog-title">{{ post.title }}</h3>
+
+                <a href="{% url 'blog_detail' post.pk %}" class="btn-read-more">
+                    Read Article <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center col-12 text-muted py-5" data-aos="fade-in">
+            <h3>No posts found in this category.</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
